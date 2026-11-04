@@ -14,13 +14,13 @@ export function SiteFooter() {
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {site.nav.map((item) => (
               <li key={item.href}>
-                <a href={item.href} className="transition-colors hover:text-fg">
+                <a href={item.href} className="inline-flex min-h-6 items-center transition-colors hover:text-fg">
                   {item.label}
                 </a>
               </li>
             ))}
             <li>
-              <a href="#top" className="inline-flex items-center gap-1 text-fg transition-colors hover:text-accent">
+              <a href="#top" className="inline-flex min-h-6 items-center gap-1 text-fg transition-colors hover:text-accent">
                 Back to top <ArrowUp aria-hidden size={14} />
               </a>
             </li>

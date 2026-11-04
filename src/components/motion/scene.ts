@@ -29,6 +29,30 @@ export type ScenePalette = { line: string; point: string; accent: string; signal
 
 export type SceneHandle = { dispose: () => void };
 
+const SOFTWARE_RENDERER = /swiftshader|llvmpipe|softpipe|software|basic render/i;
+
+/**
+ * True when WebGL is hardware-accelerated. Checked with a throwaway context
+ * *before* Three.js is downloaded: on CPU-only WebGL every frame of a
+ * full-viewport canvas blocks the main thread (measured at 760–1,340 ms of
+ * input delay during a smooth scroll under 4x CPU throttling), so those
+ * visitors get the page and its scroll motion without the 3D layer.
+ * Browsers that hide the renderer name (e.g. Firefox) are treated as capable.
+ */
+export function canRenderScene(): boolean {
+  try {
+    const probe = document.createElement("canvas");
+    const gl = (probe.getContext("webgl2") ?? probe.getContext("webgl")) as WebGLRenderingContext | null;
+    if (!gl) return false;
+    const info = gl.getExtension("WEBGL_debug_renderer_info");
+    const name = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    return !SOFTWARE_RENDERER.test(name);
+  } catch {
+    return false;
+  }
+}
+
 export function createScene(
   THREE: Three,
   canvas: HTMLCanvasElement,
@@ -49,7 +73,8 @@ export function createScene(
   const gl = renderer.getContext();
   const info = gl.getExtension("WEBGL_debug_renderer_info");
   const rendererName = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
-  const software = /swiftshader|llvmpipe|softpipe|software|basic render/i.test(rendererName);
+  // Second line of defence if the probe above was inconclusive.
+  const software = SOFTWARE_RENDERER.test(rendererName);
   if (software) animate = false;
 
   const dpr = software ? 1 : Math.min(window.devicePixelRatio || 1, 2);

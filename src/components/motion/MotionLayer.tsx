@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { SceneHandle } from "./scene";
-import { createScene } from "./scene";
+import { canRenderScene, createScene } from "./scene";
 import { initScrollMotion, restingState } from "./scroll";
 
 /** Hand the main thread back to the browser between startup phases. */
@@ -14,7 +14,8 @@ const PALETTE = { line: "#6a6a74", point: "#f5f5f3", accent: "#eeff41", signal: 
 /**
  * Fixed WebGL layer behind the page plus all scroll choreography.
  * GSAP and Three.js are loaded after the page is idle, in their own chunks,
- * so neither competes with the first paint or hydration.
+ * so neither competes with the first paint or hydration. Three.js is only
+ * downloaded when WebGL is hardware-accelerated (see canRenderScene).
  */
 export function MotionLayer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -33,12 +34,11 @@ export function MotionLayer() {
       if (cancelled) return;
       await yieldToMain();
 
-      const desktop = window.matchMedia("(min-width: 768px)").matches;
       const motion = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const state = restingState(desktop);
+      const state = restingState();
       const canvas = canvasRef.current;
 
-      if (canvas) {
+      if (canvas && canRenderScene()) {
         const THREE = await import("three");
         if (cancelled) return;
         await yieldToMain();

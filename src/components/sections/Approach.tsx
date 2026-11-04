@@ -11,7 +11,7 @@ export function Approach() {
     <section id="approach" aria-labelledby="approach-title" className="bg-surface py-section">
       <Container>
         <div className={grid}>
-          <Reveal className="col-span-4 md:col-span-8 lg:col-span-6">
+          <div className="col-span-4 md:col-span-8 lg:col-span-6">
             <SectionHeading
               id="approach-title"
               index="03"
@@ -19,7 +19,7 @@ export function Approach() {
               title={approach.heading}
               intro={approach.intro}
             />
-          </Reveal>
+          </div>
         </div>
 
         <ol data-steps className="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 md:mt-24 md:grid-cols-2 md:gap-y-16 lg:grid-cols-4">
@@ -35,7 +35,8 @@ export function Approach() {
                   i < last ? "top-3 -bottom-12 left-[5px] w-px" : "hidden",
                   // md+: horizontal; runs through the gutter except on the last step
                   "md:top-[5px] md:bottom-auto md:left-0 md:block md:h-px md:w-auto",
-                  i === last ? "md:right-0" : "md:-right-6",
+                  // right-hand column on tablet, last step on desktop: stop at the edge
+                  i === last ? "md:right-0" : i % 2 === 1 ? "md:right-0 lg:-right-6" : "md:-right-6",
                 ].join(" ")}
               />
               <span

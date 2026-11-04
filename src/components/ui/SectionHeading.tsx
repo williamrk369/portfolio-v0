@@ -23,7 +23,7 @@ export function SectionHeading({ id, index, eyebrow, title, intro, className = "
         <Text>{title}</Text>
       </h2>
       {intro ? (
-        <p className="mt-6 max-w-read text-lead text-muted">
+        <p data-reveal className="mt-6 max-w-read text-lead text-muted">
           <Text>{intro}</Text>
         </p>
       ) : null}

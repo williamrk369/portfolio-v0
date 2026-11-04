@@ -21,7 +21,7 @@ const base = { spread: 0, rot: 0, opacity: 1, accent: 0 };
 
 /** Where the object sits as each section arrives (viewport fractions). */
 const DESKTOP: Keyframes = {
-  hero: { ...base, x: 0.34, y: 0.2, size: 0.3 },
+  hero: { ...base, x: 0.33, y: 0.2, size: 0.26 },
   work: { ...base, x: 0.46, y: 0.36, size: 0.12, spread: 0.9, rot: 1.4, opacity: 0.5 },
   capabilities: { ...base, x: -0.3, y: -0.2, size: 0.28, spread: 0.12, rot: 2.6 },
   approach: { ...base, x: 0, y: 0.05, size: 0.22, spread: 1.1, rot: 3.6, opacity: 0.5 },
@@ -35,10 +35,27 @@ const MOBILE: Keyframes = {
   capabilities: { ...base, x: 0.38, y: 0.34, size: 0.14, spread: 0.2, rot: 2.6, opacity: 0.45 },
   approach: { ...base, x: 0.2, y: 0.3, size: 0.12, spread: 1.1, rot: 3.6, opacity: 0.3 },
   about: { ...base, x: 0.34, y: 0.4, size: 0.08, spread: 0.4, rot: 4.4, opacity: 0.5 },
-  contact: { ...base, x: 0.32, y: -0.1, size: 0.17, rot: 5.6, opacity: 0.85, accent: 1 },
+  contact: { ...base, x: 0.4, y: -0.1, size: 0.13, rot: 5.6, opacity: 0.85, accent: 1 },
 };
 
-export const restingState = (desktop: boolean): SceneState => ({ ...(desktop ? DESKTOP : MOBILE).hero });
+/** Tablet: the headline spans the full width, so the object sits small above it. */
+const TABLET: Keyframes = {
+  ...MOBILE,
+  hero: { ...base, x: 0.4, y: 0.36, size: 0.14, opacity: 0.6 },
+  contact: { ...base, x: 0.33, y: 0.14, size: 0.14, rot: 5.6, opacity: 0.9, accent: 1 },
+};
+
+const QUERIES = {
+  desktop: "(min-width: 1024px)",
+  tablet: "(min-width: 768px) and (max-width: 1023.98px)",
+  motion: "(prefers-reduced-motion: no-preference)",
+};
+
+const keyframesFor = (desktop: boolean, tablet: boolean) => (desktop ? DESKTOP : tablet ? TABLET : MOBILE);
+
+export const restingState = (): SceneState => ({
+  ...keyframesFor(matchMedia(QUERIES.desktop).matches, matchMedia(QUERIES.tablet).matches).hero,
+});
 
 const belowFold = (el: Element) => el.getBoundingClientRect().top > window.innerHeight;
 
@@ -59,14 +76,10 @@ export function initScrollMotion({
   gsap.registerPlugin(ScrollTrigger, SplitText);
   const mm = gsap.matchMedia();
 
-  mm.add(
-    {
-      desktop: "(min-width: 768px)",
-      motion: "(prefers-reduced-motion: no-preference)",
-    },
-    (ctx) => {
-      const { desktop, motion } = ctx.conditions as { desktop: boolean; motion: boolean };
-      const K = desktop ? DESKTOP : MOBILE;
+  mm.add(QUERIES, (ctx) => {
+      const { desktop, tablet, motion } = ctx.conditions as { desktop: boolean; tablet: boolean; motion: boolean };
+      const K = keyframesFor(desktop, tablet);
+      const horizontal = desktop || tablet; // Approach rail runs across from 768px up
 
       /* --- Object: one scrubbed segment per section -------------------- */
       Object.assign(state, K.hero);
@@ -108,14 +121,13 @@ export function initScrollMotion({
 
       // The object's scroll path is set up first. Each DOM group then gets its
       // own task, so startup never becomes one long main-thread block.
-      const timers = domSteps(desktop).map((step, i) =>
+      const timers = domSteps(horizontal).map((step, i) =>
         window.setTimeout(() => ctx.add(step), 16 * (i + 1)),
       );
       return () => timers.forEach((t) => window.clearTimeout(t));
-    },
-  );
+  });
 
-  function domSteps(desktop: boolean): Array<() => void> {
+  function domSteps(horizontal: boolean): Array<() => void> {
     return [
       /* --- Hero: headline and figure drift as the page leaves ---------- */
       () => {
@@ -182,8 +194,8 @@ export function initScrollMotion({
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: steps,
-            start: desktop ? "top 85%" : "top 80%",
-            end: desktop ? "top 55%" : "bottom 75%",
+            start: horizontal ? "top 85%" : "top 80%",
+            end: horizontal ? "top 55%" : "bottom 75%",
             scrub: 1,
           },
         });
@@ -192,7 +204,7 @@ export function initScrollMotion({
           if (rails[i]) {
             tl.from(
               rails[i],
-              desktop
+              horizontal
                 ? { scaleX: 0, transformOrigin: "left center", duration: 1, ease: "none" }
                 : { scaleY: 0, transformOrigin: "center top", duration: 1, ease: "none" },
               i + 0.1,

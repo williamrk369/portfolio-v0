@@ -11,7 +11,7 @@ export function Capabilities() {
     <section id="capabilities" aria-labelledby="capabilities-title" className="py-section">
       <Container className={`${grid} gap-y-12`}>
         <div className="col-span-4 md:col-span-8 lg:col-span-4">
-          <Reveal className="lg:sticky lg:top-28">
+          <div className="lg:sticky lg:top-28">
             <SectionHeading
               id="capabilities-title"
               index="02"
@@ -19,7 +19,7 @@ export function Capabilities() {
               title={capabilities.heading}
               intro={capabilities.intro}
             />
-          </Reveal>
+          </div>
         </div>
 
         <div className="col-span-4 md:col-span-12 lg:col-span-8">
@@ -39,7 +39,7 @@ export function Capabilities() {
                   <ul className="mt-5 flex flex-col gap-1.5 text-meta text-faint">
                     {item.scope.map((s) => (
                       <li key={s} className="flex items-center gap-3">
-                        <span aria-hidden className="size-1 shrink-0 bg-signal/70" />
+                        <span aria-hidden className="size-1 shrink-0 bg-faint" />
                         {s}
                       </li>
                     ))}

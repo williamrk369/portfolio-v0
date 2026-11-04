@@ -9,8 +9,12 @@ type Props = { href: string; children: ReactNode; className?: string };
  */
 export function SmartLink({ href, children, className = "" }: Props) {
   if (isPlaceholder(href)) {
+    const textOnly = className
+      .split(/\s+/)
+      .filter((c) => !/^(underline|decoration-|underline-offset-|hover:|transition)/.test(c))
+      .join(" ");
     return (
-      <span className={className}>
+      <span className={`${textOnly} text-muted`}>
         {children} <Text>{"[add link]"}</Text>
       </span>
     );

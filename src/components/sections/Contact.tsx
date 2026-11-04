@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { site } from "@/content/site";
-import { plain, Text } from "@/lib/content";
+import { isPlaceholder, plain, Text } from "@/lib/content";
 import { Container, grid } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { SmartLink } from "@/components/ui/SmartLink";
@@ -12,7 +12,7 @@ export function Contact() {
   return (
     <section id="contact" aria-labelledby="contact-title" className="border-t border-line-strong py-section">
       <Container>
-        <Reveal className={`${grid} gap-y-12`}>
+        <div className={`${grid} gap-y-12`}>
           <div className="col-span-4 md:col-span-12 lg:col-span-9">
             <p className="mb-8 flex items-center gap-3 text-meta font-semibold uppercase text-faint">
               <span aria-hidden className="font-mono text-signal">
@@ -29,14 +29,21 @@ export function Contact() {
             </h2>
           </div>
 
-          <div className="col-span-4 md:col-span-6 lg:col-span-5">
+          <Reveal className="col-span-4 md:col-span-6 lg:col-span-5">
             <p className="max-w-read text-lead text-muted">{contact.body}</p>
-          </div>
+          </Reveal>
 
-          <div className="col-span-4 flex flex-col items-start gap-6 md:col-span-6 lg:col-span-5 lg:col-start-8">
-            <ButtonLink href={`mailto:${email}`} icon={<ArrowUpRight size={18} strokeWidth={2.25} />}>
-              Email me
-            </ButtonLink>
+          <Reveal className="col-span-4 flex flex-col items-start gap-6 md:col-span-6 lg:col-span-5 lg:col-start-8">
+            {isPlaceholder(site.email) ? (
+              // Until a real address exists, show the slot instead of a dead mailto: link.
+              <span className="inline-flex h-14 items-center gap-2 border border-dashed border-line-strong px-7 text-base font-semibold text-muted">
+                Email me <Text>{"[add email in site.ts]"}</Text>
+              </span>
+            ) : (
+              <ButtonLink href={`mailto:${email}`} icon={<ArrowUpRight size={18} strokeWidth={2.25} />}>
+                Email me
+              </ButtonLink>
+            )}
             <p className="font-mono text-[0.9375rem] text-muted break-all">
               <Text>{site.email}</Text>
             </p>
@@ -52,8 +59,8 @@ export function Contact() {
                 </li>
               ))}
             </ul>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </Container>
     </section>
   );

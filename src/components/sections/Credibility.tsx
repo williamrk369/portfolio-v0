@@ -14,17 +14,12 @@ export function Credibility() {
             {credibility.heading}
           </h2>
           <dl className="grid grid-cols-1 gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
-            {credibility.items.map((item, i) => (
+            {credibility.items.map((item) => (
               <div
                 key={item.label}
                 className="flex flex-col gap-3 bg-ink py-6 pr-6 sm:even:pl-6 lg:py-8 lg:not-first:pl-6"
               >
-                <dt className="flex items-center gap-2 text-meta font-semibold uppercase text-faint">
-                  <span aria-hidden className="font-mono text-signal">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  {item.label}
-                </dt>
+                <dt className="text-meta font-semibold uppercase text-faint">{item.label}</dt>
                 <dd className="font-display text-subtitle font-semibold text-fg">
                   <Text>{item.value}</Text>
                 </dd>

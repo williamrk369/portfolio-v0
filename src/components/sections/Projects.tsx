@@ -17,7 +17,7 @@ export function Projects() {
     <section id="work" aria-labelledby="work-title" className="py-section">
       <Container>
         <div className={grid}>
-          <Reveal className="col-span-4 md:col-span-8 lg:col-span-7">
+          <div className="col-span-4 md:col-span-8 lg:col-span-7">
             <SectionHeading
               id="work-title"
               index="01"
@@ -25,7 +25,7 @@ export function Projects() {
               title="Selected work"
               intro="Each project is told the same way: the problem, the decision that mattered, and what changed as a result."
             />
-          </Reveal>
+          </div>
         </div>
 
         <ol className={`${grid} mt-16 gap-y-24 md:mt-24 lg:gap-y-32`}>
@@ -57,7 +57,7 @@ export function Projects() {
 
 function FeaturedProject({ project }: { project: Project }) {
   return (
-    <Reveal as="article" className="group relative" aria-labelledby={`project-${project.index}`}>
+    <Reveal as="article" className={`${primaryHref(project) ? "group" : ""} relative`} aria-labelledby={`project-${project.index}`}>
       <div className={`${grid} gap-y-8`}>
         <div className="col-span-4 flex items-end justify-between gap-6 border-b border-line-strong pb-6 md:col-span-12">
           <ProjectTitle project={project} size="lg" />
@@ -89,7 +89,11 @@ function FeaturedProject({ project }: { project: Project }) {
 
 function CompactProject({ project, tall }: { project: Project; tall: boolean }) {
   return (
-    <Reveal as="article" className="group relative flex flex-col gap-8" aria-labelledby={`project-${project.index}`}>
+    <Reveal
+      as="article"
+      className={`${primaryHref(project) ? "group" : ""} relative flex flex-col gap-8`}
+      aria-labelledby={`project-${project.index}`}
+    >
       <div className="flex items-end justify-between gap-6 border-b border-line-strong pb-6">
         <ProjectTitle project={project} size="md" />
         <Index value={project.index} />
@@ -154,19 +158,16 @@ function Index({ value }: { value: string }) {
 
 function Meta({ project }: { project: Project }) {
   return (
-    <p className="flex flex-wrap gap-x-4 gap-y-1 text-meta text-faint">
-      <span>
-        <Text>{project.kind}</Text>
-      </span>
-      <span aria-hidden>/</span>
-      <span>
-        <Text>{project.role}</Text>
-      </span>
-      <span aria-hidden>/</span>
-      <span>
-        <Text>{project.year}</Text>
-      </span>
-    </p>
+    // Each separator belongs to the item after it, so a wrap never leaves a
+    // dangling "/" at the end of a line.
+    <ul className="flex flex-wrap gap-x-3 gap-y-1 text-meta text-faint">
+      {[project.kind, project.role, project.year].map((value, i) => (
+        <li key={i} className="flex items-center gap-3">
+          {i > 0 ? <span aria-hidden>/</span> : null}
+          <Text>{value}</Text>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -180,7 +181,7 @@ function Story({ project, className = "" }: { project: Project; className?: stri
     <dl className={`grid grid-cols-1 gap-x-6 gap-y-5 ${className}`}>
       {rows.map((row) => (
         <div key={row.label} className="border-t border-line pt-4">
-          <dt className={`text-meta font-semibold uppercase ${row.label === "Outcome" ? "text-accent" : "text-faint"}`}>
+          <dt className={`text-meta font-semibold uppercase ${row.label === "Outcome" ? "text-fg" : "text-faint"}`}>
             {row.label}
           </dt>
           <dd className="mt-2 text-body text-muted">
