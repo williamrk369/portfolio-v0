@@ -29,7 +29,7 @@ const toneClass: Record<Span["tone"], string> = {
 
 export function HeroFigure() {
   return (
-    <figure className="shadow-hard border border-line-strong bg-surface">
+    <figure data-hero-figure className="shadow-hard border border-line-strong bg-surface">
       <div className="flex items-center justify-between border-b border-line-strong px-4 py-3 text-meta md:px-6">
         <span className="font-mono text-fg">fig. 01</span>
         <span className="font-mono text-faint">illustrative</span>

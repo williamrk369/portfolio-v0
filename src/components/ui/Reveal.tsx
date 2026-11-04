@@ -1,13 +1,12 @@
-import type { ComponentPropsWithoutRef, CSSProperties, ElementType } from "react";
+import type { ComponentPropsWithoutRef, ElementType } from "react";
 
-type Props<T extends ElementType> = { as?: T; delay?: number } & ComponentPropsWithoutRef<T>;
+type Props<T extends ElementType> = { as?: T } & ComponentPropsWithoutRef<T>;
 
 /**
- * Marks an element for the scroll-triggered entrance. Pure markup — the
- * single RevealObserver client component does the work, so sections stay
- * Server Components.
+ * Marks an element for the scroll-triggered entrance. Pure markup — GSAP in
+ * MotionLayer does the work, so sections stay Server Components.
  */
-export function Reveal<T extends ElementType = "div">({ as, delay = 0, style, ...rest }: Props<T>) {
-  const Tag = as ?? "div";
-  return <Tag data-reveal="" style={{ ...style, "--reveal-delay": delay } as CSSProperties} {...rest} />;
+export function Reveal<T extends ElementType = "div">({ as, ...rest }: Props<T>) {
+  const Tag: ElementType = as ?? "div";
+  return <Tag data-reveal="" {...rest} />;
 }

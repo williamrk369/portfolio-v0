@@ -19,7 +19,7 @@ export function SectionHeading({ id, index, eyebrow, title, intro, className = "
         </span>
         <span>{eyebrow}</span>
       </p>
-      <h2 id={id} className="text-display text-fg">
+      <h2 id={id} data-split className="text-display text-fg">
         <Text>{title}</Text>
       </h2>
       {intro ? (

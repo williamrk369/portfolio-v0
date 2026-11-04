@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line">
+    <footer className="relative z-[1] border-t border-line">
       <Container className="flex flex-col gap-6 py-8 text-meta text-faint md:flex-row md:items-center md:justify-between">
         <p>
           © {site.copyrightYear} <Text>{site.name}</Text>. {site.role}.

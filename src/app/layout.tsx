@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, Syne } from "next/font/google";
 import { site } from "@/content/site";
 import { plain } from "@/lib/content";
-import { RevealObserver } from "@/components/ui/RevealObserver";
+import { MotionLayer } from "@/components/motion/MotionLayer";
 import "./globals.css";
 
 const syne = Syne({
@@ -42,11 +42,6 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${syne.variable} ${manrope.variable} antialiased`}>
-      <head>
-        <noscript>
-          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
-        </noscript>
-      </head>
       <body>
         <a
           href="#main"
@@ -54,8 +49,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <MotionLayer />
         {children}
-        <RevealObserver />
       </body>
     </html>
   );

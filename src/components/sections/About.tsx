@@ -13,7 +13,7 @@ export function About() {
           <Portrait />
         </Reveal>
 
-        <Reveal delay={80} className="col-span-4 md:col-span-7 lg:col-span-7 lg:col-start-6">
+        <Reveal className="col-span-4 md:col-span-7 lg:col-span-7 lg:col-start-6">
           <p className="mb-6 flex items-center gap-3 text-meta font-semibold uppercase text-faint">
             <span aria-hidden className="font-mono text-signal">
               (04)
@@ -51,7 +51,7 @@ function Portrait() {
   const { portrait } = site.about;
   return (
     <figure>
-      <div className="shadow-hard relative aspect-[4/5] overflow-hidden border border-line-strong bg-blueprint max-md:w-4/5">
+      <div data-portrait className="shadow-hard relative aspect-[4/5] overflow-hidden border border-line-strong bg-blueprint max-md:w-4/5">
         {portrait ? (
           <Image
             src={portrait.src}

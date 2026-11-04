@@ -22,6 +22,7 @@ export function Contact() {
             </p>
             <h2
               id="contact-title"
+              data-split
               className="text-[clamp(2.25rem,1.2rem+4.6vw,5.75rem)] leading-[0.98] tracking-[-0.04em] text-fg"
             >
               {contact.heading}

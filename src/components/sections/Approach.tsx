@@ -22,12 +22,13 @@ export function Approach() {
           </Reveal>
         </div>
 
-        <ol className="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 md:mt-24 md:grid-cols-2 md:gap-y-16 lg:grid-cols-4">
+        <ol data-steps className="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 md:mt-24 md:grid-cols-2 md:gap-y-16 lg:grid-cols-4">
           {approach.steps.map((step, i) => (
-            <Reveal as="li" key={step.title} delay={i * 80} className="relative pl-10 md:pl-0 md:pt-12">
+            <Reveal as="li" key={step.title} className="relative pl-10 md:pl-0 md:pt-12">
               {/* rail */}
               <span
                 aria-hidden
+                data-rail
                 className={[
                   "absolute bg-line-strong",
                   // mobile: vertical, joins to the next step
@@ -39,6 +40,7 @@ export function Approach() {
               />
               <span
                 aria-hidden
+                data-marker
                 className={`absolute top-1 left-0 size-[11px] border md:top-0 ${
                   i === last ? "border-accent bg-accent" : "border-muted bg-surface"
                 }`}

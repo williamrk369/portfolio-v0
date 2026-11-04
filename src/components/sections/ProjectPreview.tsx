@@ -21,6 +21,7 @@ export function ProjectPreview({ project, aspect, sizes, priority }: Props) {
   return (
     <figure>
       <div className={`${frame} ${aspect}`}>
+        <div data-parallax className="absolute inset-x-0 -inset-y-[6%]">
         {image ? (
           <Image
             src={image.src}
@@ -34,6 +35,7 @@ export function ProjectPreview({ project, aspect, sizes, priority }: Props) {
         ) : (
           <Abstract variant={project.preview} />
         )}
+        </div>
       </div>
       {!image ? (
         <figcaption className="mt-3 text-meta text-faint">

@@ -28,7 +28,6 @@ export function Capabilities() {
               <Reveal
                 as="li"
                 key={item.title}
-                delay={i * 60}
                 className="grid grid-cols-4 gap-x-6 gap-y-4 border-t border-line py-8 md:grid-cols-8 md:py-10"
               >
                 <span aria-hidden className="col-span-4 font-mono text-meta text-signal md:col-span-1 md:pt-2">

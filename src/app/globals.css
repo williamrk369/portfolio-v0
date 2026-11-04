@@ -196,25 +196,6 @@
    Motion
    ========================================================================== */
 
-/* Scroll reveal: hidden only when motion is allowed AND JS is running
-   (RevealObserver sets data-motion on <html>). Without JS, content is
-   always visible. */
-@media (prefers-reduced-motion: no-preference) {
-  html[data-motion] [data-reveal] {
-    opacity: 0;
-    transform: translate3d(0, 24px, 0);
-    transition:
-      opacity 700ms var(--ease-out-quart),
-      transform 700ms var(--ease-out-quart);
-    transition-delay: calc(var(--reveal-delay, 0) * 1ms);
-  }
-
-  html[data-motion] [data-reveal][data-revealed] {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

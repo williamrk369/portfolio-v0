@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <span id="top" aria-hidden className="absolute top-0" />
       <SiteHeader />
-      <main id="main" tabIndex={-1} className="outline-none">
+      <main id="main" tabIndex={-1} className="relative z-[1] outline-none">
         <Hero />
         <Credibility />
         <Projects />

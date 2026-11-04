@@ -13,7 +13,7 @@ const delay = (step: number) => ({ animationDelay: `${step * 70}ms` });
 export function Hero() {
   const { hero } = site;
   return (
-    <section aria-labelledby="hero-title" className="pt-12 pb-section md:pt-20">
+    <section data-hero aria-labelledby="hero-title" className="pt-12 pb-section md:pt-20">
       <Container>
         <div className={`${grid} gap-y-12 md:gap-y-16`}>
           <p
