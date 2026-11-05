@@ -9,10 +9,10 @@ type Props = {
   className?: string;
 };
 
-/** Eyebrow "(02) Selected work" + Syne H2 + optional intro paragraph. */
+/** Centred eyebrow "(02) Skills" + Syne H2 + optional one-line intro. */
 export function SectionHeading({ id, index, eyebrow, title, intro, className = "" }: Props) {
   return (
-    <header className={className}>
+    <header className={`mx-auto flex max-w-3xl flex-col items-center text-center ${className}`}>
       <p className="mb-6 flex items-center gap-3 text-meta font-semibold uppercase text-faint">
         <span className="font-mono text-signal" aria-hidden>
           ({index})

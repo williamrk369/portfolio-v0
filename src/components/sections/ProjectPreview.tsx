@@ -39,7 +39,7 @@ export function ProjectPreview({ project, aspect, sizes, priority }: Props) {
       </div>
       {!image ? (
         <figcaption className="mt-3 text-meta text-faint">
-          <Text>{`[Preview — add a screenshot for project ${project.index}]`}</Text>
+          <Text>{`[Add a screenshot of project ${project.index}]`}</Text>
         </figcaption>
       ) : null}
     </figure>

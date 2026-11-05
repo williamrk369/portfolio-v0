@@ -18,7 +18,7 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const title = `${plain(site.name)} — ${site.role}`;
+const title = `${plain(site.name)} | ${site.role}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

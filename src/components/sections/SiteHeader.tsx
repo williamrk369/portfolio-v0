@@ -31,8 +31,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden md:block">
-          <ButtonLink href="#contact" size="md">
-            Get in touch
+          <ButtonLink href={site.navCta.href} size="md">
+            {site.navCta.label}
           </ButtonLink>
         </div>
 

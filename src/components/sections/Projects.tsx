@@ -8,151 +8,73 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ProjectPreview } from "./ProjectPreview";
 
 /**
- * Selected work. The first project gets a wide editorial spread; the rest
- * sit as an asymmetric, vertically staggered pair so the section never reads
- * as a uniform card grid.
+ * Project showcase: one full-width plate per project, then a single row
+ * underneath that leads with the result and puts the proof link beside it.
  */
 export function Projects() {
   return (
     <section id="work" aria-labelledby="work-title" className="py-section">
       <Container>
-        <div className={grid}>
-          <div className="col-span-4 md:col-span-8 lg:col-span-7">
-            <SectionHeading
-              id="work-title"
-              index="01"
-              eyebrow="Projects"
-              title="Selected work"
-              intro="Each project is told the same way: the problem, the decision that mattered, and what changed as a result."
-            />
-          </div>
-        </div>
-
-        <ol className={`${grid} mt-16 gap-y-24 md:mt-24 lg:gap-y-32`}>
-          {site.projects.map((project, i) =>
-            i === 0 ? (
-              <li key={project.index} className="col-span-4 md:col-span-12">
-                <FeaturedProject project={project} />
-              </li>
-            ) : (
-              <li
-                key={project.index}
-                className={
-                  i % 2 === 1
-                    ? "col-span-4 md:col-span-12 lg:col-span-7"
-                    : "col-span-4 md:col-span-12 lg:col-span-5 lg:mt-48"
-                }
-              >
-                <CompactProject project={project} tall={i % 2 === 0} />
-              </li>
-            ),
-          )}
+        <SectionHeading id="work-title" index="01" eyebrow="Projects" title="Work you can check" />
+        <ol className="mt-16 flex flex-col gap-24 md:mt-24 lg:gap-32">
+          {site.projects.map((project, i) => (
+            <li key={project.index}>
+              <ProjectPlate project={project} priority={i === 0} />
+            </li>
+          ))}
         </ol>
       </Container>
     </section>
   );
 }
 
-/* ------------------------------------------------------------------------ */
-
-function FeaturedProject({ project }: { project: Project }) {
-  return (
-    <Reveal as="article" className={`${primaryHref(project) ? "group" : ""} relative`} aria-labelledby={`project-${project.index}`}>
-      <div className={`${grid} gap-y-8`}>
-        <div className="col-span-4 flex items-end justify-between gap-6 border-b border-line-strong pb-6 md:col-span-12">
-          <ProjectTitle project={project} size="lg" />
-          <Index value={project.index} />
-        </div>
-
-        <div className="col-span-4 md:col-span-12 lg:col-span-8">
-          <ProjectPreview
-            project={project}
-            aspect="aspect-[16/10]"
-            sizes="(min-width: 1280px) 800px, (min-width: 1024px) 66vw, 100vw"
-            priority
-          />
-        </div>
-
-        <div className="col-span-4 flex flex-col gap-8 md:col-span-12 lg:col-span-4">
-          <Meta project={project} />
-          <p className="text-lead text-fg">
-            <Text>{project.summary}</Text>
-          </p>
-          <Story project={project} className="md:grid-cols-3 lg:grid-cols-1" />
-          <Stack items={project.stack} />
-          <Links project={project} />
-        </div>
-      </div>
-    </Reveal>
-  );
-}
-
-function CompactProject({ project, tall }: { project: Project; tall: boolean }) {
-  return (
-    <Reveal
-      as="article"
-      className={`${primaryHref(project) ? "group" : ""} relative flex flex-col gap-8`}
-      aria-labelledby={`project-${project.index}`}
-    >
-      <div className="flex items-end justify-between gap-6 border-b border-line-strong pb-6">
-        <ProjectTitle project={project} size="md" />
-        <Index value={project.index} />
-      </div>
-      <div className="md:grid md:grid-cols-12 md:gap-6 lg:block">
-        <div className="md:col-span-7 lg:col-span-12">
-          <ProjectPreview
-            project={project}
-            aspect={tall ? "aspect-[4/3] lg:aspect-[4/5]" : "aspect-[4/3]"}
-            sizes="(min-width: 1024px) 45vw, (min-width: 768px) 58vw, 100vw"
-          />
-        </div>
-        <div className="mt-8 flex flex-col gap-6 md:col-span-5 md:mt-0 lg:mt-8">
-          <Meta project={project} />
-          <p className="text-lead text-fg">
-            <Text>{project.summary}</Text>
-          </p>
-          <Story project={project} />
-          <Stack items={project.stack} />
-          <Links project={project} />
-        </div>
-      </div>
-    </Reveal>
-  );
-}
-
-/* --- Shared project pieces --------------------------------------------- */
-
 function primaryHref(project: Project) {
   const link = project.links[0];
   return link && !isPlaceholder(link.href) ? link.href : null;
 }
 
-function ProjectTitle({ project, size }: { project: Project; size: "lg" | "md" }) {
+function ProjectPlate({ project, priority }: { project: Project; priority: boolean }) {
   const href = primaryHref(project);
-  const cls = size === "lg" ? "text-display" : "text-title";
-  const content = <Text>{project.title}</Text>;
   return (
-    <h3 id={`project-${project.index}`} className={`${cls} max-w-[18ch] text-fg`}>
-      {href ? (
-        // Stretched link: the whole article is clickable, one tab stop.
-        <a href={href} className="decoration-signal decoration-2 underline-offset-8 after:absolute after:inset-0 group-hover:underline">
-          {content}
-        </a>
-      ) : (
-        content
-      )}
-    </h3>
-  );
-}
-
-function Index({ value }: { value: string }) {
-  return (
-    <span
-      aria-hidden
-      className="font-display text-[2.5rem] leading-none font-bold tracking-[-0.04em] text-transparent [-webkit-text-stroke:1px_var(--color-line-strong)] transition-[-webkit-text-stroke-color] duration-300 group-hover:[-webkit-text-stroke-color:var(--color-signal)] md:text-[3.5rem]"
+    <Reveal
+      as="article"
+      className={`${href ? "group" : ""} relative`}
+      aria-labelledby={`project-${project.index}`}
     >
-      {value}
-    </span>
+      <ProjectPreview
+        project={project}
+        aspect="aspect-[16/10] md:aspect-[16/8]"
+        sizes="(min-width: 1280px) 1184px, 100vw"
+        priority={priority}
+      />
+
+      <div className={`${grid} mt-10 gap-y-8`}>
+        <div className="col-span-4 flex flex-col gap-4 md:col-span-12 lg:col-span-5">
+          <Meta project={project} />
+          <h3 id={`project-${project.index}`} className="text-title text-fg">
+            {href ? (
+              // Stretched link: the whole plate is clickable, one tab stop.
+              <a href={href} className="decoration-signal decoration-2 underline-offset-8 after:absolute after:inset-0 group-hover:underline">
+                <Text>{project.title}</Text>
+              </a>
+            ) : (
+              <Text>{project.title}</Text>
+            )}
+          </h3>
+          <p className="text-lead text-muted">
+            <Text>{project.summary}</Text>
+          </p>
+        </div>
+
+        <div className="col-span-4 flex flex-col gap-8 md:col-span-12 lg:col-span-7">
+          <Story project={project} />
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Stack items={project.stack} />
+            <Links project={project} />
+          </div>
+        </div>
+      </div>
+    </Reveal>
   );
 }
 
@@ -161,9 +83,10 @@ function Meta({ project }: { project: Project }) {
     // Each separator belongs to the item after it, so a wrap never leaves a
     // dangling "/" at the end of a line.
     <ul className="flex flex-wrap gap-x-3 gap-y-1 text-meta text-faint">
+      <li className="font-mono text-signal">{project.index}</li>
       {[project.kind, project.role, project.year].map((value, i) => (
         <li key={i} className="flex items-center gap-3">
-          {i > 0 ? <span aria-hidden>/</span> : null}
+          <span aria-hidden>/</span>
           <Text>{value}</Text>
         </li>
       ))}
@@ -171,17 +94,18 @@ function Meta({ project }: { project: Project }) {
   );
 }
 
-function Story({ project, className = "" }: { project: Project; className?: string }) {
+function Story({ project }: { project: Project }) {
+  // Result first: the benefit leads, the how follows.
   const rows = [
+    { label: "Result", value: project.outcome },
     { label: "Problem", value: project.problem },
-    { label: "Solution", value: project.solution },
-    { label: "Outcome", value: project.outcome },
+    { label: "What I built", value: project.solution },
   ];
   return (
-    <dl className={`grid grid-cols-1 gap-x-6 gap-y-5 ${className}`}>
+    <dl className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-3">
       {rows.map((row) => (
         <div key={row.label} className="border-t border-line pt-4">
-          <dt className={`text-meta font-semibold uppercase ${row.label === "Outcome" ? "text-fg" : "text-faint"}`}>
+          <dt className={`text-meta font-semibold uppercase ${row.label === "Result" ? "text-fg" : "text-faint"}`}>
             {row.label}
           </dt>
           <dd className="mt-2 text-body text-muted">
@@ -209,7 +133,7 @@ function Links({ project }: { project: Project }) {
   if (!project.links.length) {
     return (
       <p className="text-meta text-faint">
-        <Text>{"[Add case study, live demo or repository links]"}</Text>
+        <Text>{"[Add a live demo, repo or case study link]"}</Text>
       </p>
     );
   }

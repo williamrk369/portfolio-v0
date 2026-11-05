@@ -19,30 +19,33 @@ type Keyframes = Record<"hero" | "work" | "capabilities" | "approach" | "about" 
 
 const base = { spread: 0, rot: 0, opacity: 1, accent: 0 };
 
-/** Where the object sits as each section arrives (viewport fractions). */
+/**
+ * Where the object sits as each section arrives (viewport fractions).
+ * Centred monument: large and faint behind the hero headline, small at the
+ * edges through the content, reassembled in the accent behind Contact.
+ */
 const DESKTOP: Keyframes = {
-  hero: { ...base, x: 0.33, y: 0.2, size: 0.26 },
-  work: { ...base, x: 0.46, y: 0.36, size: 0.12, spread: 0.9, rot: 1.4, opacity: 0.5 },
-  capabilities: { ...base, x: -0.3, y: -0.2, size: 0.28, spread: 0.12, rot: 2.6 },
-  approach: { ...base, x: 0, y: 0.05, size: 0.22, spread: 1.1, rot: 3.6, opacity: 0.5 },
-  about: { ...base, x: 0.43, y: 0.37, size: 0.08, spread: 0.4, rot: 4.4, opacity: 0.8 },
-  contact: { ...base, x: 0.28, y: 0.15, size: 0.36, rot: 5.6, accent: 1 },
+  hero: { ...base, x: 0, y: 0.09, size: 0.56, opacity: 0.24 },
+  work: { ...base, x: 0.47, y: 0.32, size: 0.1, spread: 0.9, rot: 1.4, opacity: 0.45 },
+  capabilities: { ...base, x: -0.47, y: 0.32, size: 0.1, spread: 0.3, rot: 2.6, opacity: 0.45 },
+  approach: { ...base, x: 0, y: 0.05, size: 0.2, spread: 1.1, rot: 3.6, opacity: 0.3 },
+  about: { ...base, x: 0.46, y: 0.36, size: 0.08, spread: 0.4, rot: 4.4, opacity: 0.6 },
+  contact: { ...base, x: 0, y: 0.16, size: 0.5, rot: 5.6, opacity: 0.3, accent: 1 },
 };
 
 const MOBILE: Keyframes = {
-  hero: { ...base, x: 0.46, y: 0.24, size: 0.26, opacity: 0.32 },
-  work: { ...base, x: 0.42, y: 0.36, size: 0.1, spread: 0.9, rot: 1.4, opacity: 0.35 },
-  capabilities: { ...base, x: 0.38, y: 0.34, size: 0.14, spread: 0.2, rot: 2.6, opacity: 0.45 },
-  approach: { ...base, x: 0.2, y: 0.3, size: 0.12, spread: 1.1, rot: 3.6, opacity: 0.3 },
-  about: { ...base, x: 0.34, y: 0.4, size: 0.08, spread: 0.4, rot: 4.4, opacity: 0.5 },
-  contact: { ...base, x: 0.4, y: -0.1, size: 0.13, rot: 5.6, opacity: 0.85, accent: 1 },
+  hero: { ...base, x: 0, y: 0.16, size: 0.34, opacity: 0.2 },
+  work: { ...base, x: 0.44, y: 0.38, size: 0.08, spread: 0.9, rot: 1.4, opacity: 0.35 },
+  capabilities: { ...base, x: -0.44, y: 0.38, size: 0.08, spread: 0.3, rot: 2.6, opacity: 0.35 },
+  approach: { ...base, x: 0, y: 0.3, size: 0.12, spread: 1.1, rot: 3.6, opacity: 0.25 },
+  about: { ...base, x: 0.42, y: 0.4, size: 0.07, spread: 0.4, rot: 4.4, opacity: 0.45 },
+  contact: { ...base, x: 0, y: 0.22, size: 0.32, rot: 5.6, opacity: 0.16, accent: 1 },
 };
 
-/** Tablet: the headline spans the full width, so the object sits small above it. */
 const TABLET: Keyframes = {
   ...MOBILE,
-  hero: { ...base, x: 0.4, y: 0.36, size: 0.14, opacity: 0.6 },
-  contact: { ...base, x: 0.33, y: 0.14, size: 0.14, rot: 5.6, opacity: 0.9, accent: 1 },
+  hero: { ...base, x: 0, y: 0.12, size: 0.44, opacity: 0.22 },
+  contact: { ...base, x: 0, y: 0.18, size: 0.4, rot: 5.6, opacity: 0.28, accent: 1 },
 };
 
 const QUERIES = {
@@ -129,13 +132,12 @@ export function initScrollMotion({
 
   function domSteps(horizontal: boolean): Array<() => void> {
     return [
-      /* --- Hero: headline and figure drift as the page leaves ---------- */
+      /* --- Hero: the headline drifts and fades as the page leaves ------ */
       () => {
         const hero = document.querySelector("[data-hero]");
         if (!hero) return;
         const scrub = { trigger: hero, start: "top top", end: "bottom top", scrub: true };
         gsap.to("#hero-title", { yPercent: -18, opacity: 0.25, ease: "none", scrollTrigger: scrub });
-        gsap.to("[data-hero-figure]", { y: -60, ease: "none", scrollTrigger: scrub });
       },
 
       /* --- Headings: lines rise out of a mask -------------------------- */

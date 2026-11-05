@@ -1,19 +1,20 @@
 import Image from "next/image";
 import { site } from "@/content/site";
 import { Text } from "@/lib/content";
-import { Container, grid } from "@/components/ui/Container";
+import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 
+/** Centred: small portrait, one-sentence intro, two short lines, three facts. */
 export function About() {
   const { about } = site;
   return (
     <section id="about" aria-labelledby="about-title" className="py-section">
-      <Container className={`${grid} gap-y-12`}>
-        <Reveal className="col-span-4 md:col-span-5 lg:col-span-4">
+      <Container className="flex flex-col items-center text-center">
+        <Reveal className="w-40 md:w-48">
           <Portrait />
         </Reveal>
 
-        <Reveal className="col-span-4 md:col-span-7 lg:col-span-7 lg:col-start-6">
+        <Reveal className="mt-12 flex max-w-2xl flex-col items-center">
           <p className="mb-6 flex items-center gap-3 text-meta font-semibold uppercase text-faint">
             <span aria-hidden className="font-mono text-signal">
               (04)
@@ -23,25 +24,25 @@ export function About() {
           <h2 id="about-title" className="text-title text-fg">
             <Text>{about.lead}</Text>
           </h2>
-          <div className="mt-8 flex max-w-read flex-col gap-5 text-lead text-muted">
+          <div className="mt-6 flex max-w-read flex-col gap-3 text-lead text-muted">
             {about.body.map((p, i) => (
               <p key={i}>
                 <Text>{p}</Text>
               </p>
             ))}
           </div>
-
-          <dl className="mt-12 grid grid-cols-1 border-t border-line sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
-            {about.facts.map((fact) => (
-              <div key={fact.label} className="border-b border-line py-4 sm:border-b-0 sm:pr-6 md:border-b lg:border-b-0">
-                <dt className="text-meta font-semibold uppercase text-faint">{fact.label}</dt>
-                <dd className="mt-2 text-body text-fg">
-                  <Text>{fact.value}</Text>
-                </dd>
-              </div>
-            ))}
-          </dl>
         </Reveal>
+
+        <dl className="mt-12 grid w-full max-w-3xl grid-cols-1 gap-px border-y border-line bg-line sm:grid-cols-3">
+          {about.facts.map((fact) => (
+            <div key={fact.label} className="bg-ink px-4 py-5">
+              <dt className="text-meta font-semibold uppercase text-faint">{fact.label}</dt>
+              <dd className="mt-2 text-body text-fg">
+                <Text>{fact.value}</Text>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </Container>
     </section>
   );
@@ -51,24 +52,18 @@ function Portrait() {
   const { portrait } = site.about;
   return (
     <figure>
-      <div data-portrait className="shadow-hard relative aspect-[4/5] overflow-hidden border border-line-strong bg-blueprint max-md:w-4/5">
+      <div data-portrait className="shadow-hard relative aspect-[4/5] overflow-hidden border border-line-strong bg-blueprint">
         {portrait ? (
           <Image
             src={portrait.src}
             alt={portrait.alt}
             width={portrait.width}
             height={portrait.height}
-            sizes="(min-width: 1024px) 400px, (min-width: 768px) 40vw, 100vw"
+            sizes="192px"
             className="h-full w-full object-cover"
           />
         ) : (
           <div aria-hidden className="absolute inset-0">
-            {/* registration marks */}
-            {["top-4 left-4 border-t border-l", "top-4 right-4 border-t border-r", "bottom-4 left-4 border-b border-l", "right-4 bottom-4 border-r border-b"].map(
-              (pos) => (
-                <span key={pos} className={`absolute size-6 border-muted/60 ${pos}`} />
-              ),
-            )}
             <span className="absolute inset-x-[18%] top-[22%] bottom-0 rounded-t-full border border-b-0 border-line-strong" />
             <span className="absolute top-[30%] left-1/2 size-[30%] -translate-x-1/2 rounded-full border border-line-strong bg-ink" />
           </div>
@@ -76,7 +71,7 @@ function Portrait() {
       </div>
       {!portrait ? (
         <figcaption className="mt-3 text-meta text-faint">
-          <Text>{"[Portrait — add a photo in src/content/site.ts]"}</Text>
+          <Text>{"[Add a portrait]"}</Text>
         </figcaption>
       ) : null}
     </figure>

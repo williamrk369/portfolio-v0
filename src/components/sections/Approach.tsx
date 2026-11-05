@@ -1,28 +1,18 @@
 import { site } from "@/content/site";
-import { Container, grid } from "@/components/ui/Container";
+import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 
-/** Four steps on a shared rail: vertical on mobile, horizontal from md. */
+/** Three steps on a shared rail: vertical on mobile, horizontal from md. */
 export function Approach() {
   const { approach } = site;
   const last = approach.steps.length - 1;
   return (
     <section id="approach" aria-labelledby="approach-title" className="bg-surface py-section">
       <Container>
-        <div className={grid}>
-          <div className="col-span-4 md:col-span-8 lg:col-span-6">
-            <SectionHeading
-              id="approach-title"
-              index="03"
-              eyebrow="Approach"
-              title={approach.heading}
-              intro={approach.intro}
-            />
-          </div>
-        </div>
+        <SectionHeading id="approach-title" index="03" eyebrow="Process" title={approach.heading} />
 
-        <ol data-steps className="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 md:mt-24 md:grid-cols-2 md:gap-y-16 lg:grid-cols-4">
+        <ol data-steps className="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 md:mt-24 md:grid-cols-3">
           {approach.steps.map((step, i) => (
             <Reveal as="li" key={step.title} className="relative pl-10 md:pl-0 md:pt-12">
               {/* rail */}
@@ -33,10 +23,9 @@ export function Approach() {
                   "absolute bg-line-strong",
                   // mobile: vertical, joins to the next step
                   i < last ? "top-3 -bottom-12 left-[5px] w-px" : "hidden",
-                  // md+: horizontal; runs through the gutter except on the last step
+                  // md+: horizontal; runs through the gutter, the last step stops at the edge
                   "md:top-[5px] md:bottom-auto md:left-0 md:block md:h-px md:w-auto",
-                  // right-hand column on tablet, last step on desktop: stop at the edge
-                  i === last ? "md:right-0" : i % 2 === 1 ? "md:right-0 lg:-right-6" : "md:-right-6",
+                  i === last ? "md:right-0" : "md:-right-6",
                 ].join(" ")}
               />
               <span
